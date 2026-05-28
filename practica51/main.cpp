@@ -1,42 +1,30 @@
+#include "simulacion.h"
 #include <iostream>
-#include <fstream>
-#include "Particula.h"
-
-using namespace std;
-
 int main() {
-    // Archivo para guardar posiciones
     ofstream archivo("trayectoria_particula.txt");
     if (!archivo.is_open()) {
-        cerr << "Error al abrir el archivo." <<endl;
+        cerr << "Error al abrir el archivo." << endl;
         return 1;
     }
 
-    // Parámetros iniciales
-    double xIn = 50;
-    double yIn = 250;
-    double velIn = 100;
-    double ang = 65;
-    double g = 9.81;
+    // dt más pequeño para evitar tunneling
+    Simulacion sim(900, 700, 0.1);
 
-    double masa  = 1.0;   // NUEVO
-    double radio = 10.0;  // NUEVO (en píxeles)
+    // Partículas
+    sim.agregarParticula(Particula(50,  250, 50, 45,  9.81, 2.0, 10));
+    sim.agregarParticula(Particula(100, 300, 50,  45,  9.81, 2.0, 10));
+    sim.agregarParticula(Particula(200, 50,  50, 45,  9.81, 2.0, 10 ));
+    sim.agregarParticula(Particula(800, 200, 50,  45, 9.81, 2.0, 10));
 
-    // Dimensiones (como límites de la “escena”)
-    double ancho = 900;
-    double alto = 700;
+    // Obstáculos más grandes para evitar tunneling
+    sim.agregarObstaculo(Obstaculo(60,  480, 120, 120, 0.6));
+    sim.agregarObstaculo(Obstaculo(250, 380, 120, 120, 0.6));
+    sim.agregarObstaculo(Obstaculo(450, 330, 120, 120, 0.6));
+    sim.agregarObstaculo(Obstaculo(650, 430, 120, 120, 0.6));
 
-    // Crear la partícula
-    Particula p(xIn, yIn, velIn, ang, g,masa, radio);
-
-    double dt = 0.1;
-
-    // Simulación
-    while (!p.estaQuieto()) {
-        p.actualizarPosicion(dt, ancho, alto, archivo);
-    }
+    sim.ejecutar(archivo);
 
     archivo.close();
-    cout << "Simulación completada. Datos guardados en trayectoria_particula.txt\n";
+    cout << "Simulación completada.\n";
     return 0;
 }
