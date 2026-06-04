@@ -1,0 +1,6 @@
+<RCC>
+    <qresource prefix="/imagenes">
+        <file>petrosqui.PNG</file>
+        <file>tigreSinFondo.png</file>
+    </qresource>
+</RCC>
